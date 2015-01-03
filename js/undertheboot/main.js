@@ -15,21 +15,21 @@ var mainState = {
         // game.load.image('tiles_doodle32x32x6', 'assets/tiles_doodle32x32x6.png');
         
         
-        game.load.tilemap('map', '../assets/under_the_boot.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('pink_blue_32_tile', '../assets/pink_blue_32_tile.png');
+        game.load.tilemap('map', '../assets/under_the_boot/under_the_boot.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('pink_blue_32_tile', '../assets/under_the_boot/pink_blue_32_tile.png');
         
         
         // load the player sprite
         // game.load.image('dude', 'assets/ship.png');
         // game.load.spritesheet('dude', 'assets/redman_run_sheet.png', 32, 32);
-        game.load.spritesheet('dude', '../assets/running_suit_32_32_11.png', 32, 32);
+        game.load.spritesheet('dude', '../assets/under_the_boot/running_suit_32_32_11.png', 32, 32);
         
         // load the enemy image
         // game.load.image('enemy', 'assets/enemy.png');
-        game.load.image('spotlight', '../assets/spotlight_dithered_128.png');
+        game.load.image('spotlight', '../assets/under_the_boot/spotlight_dithered_128.png');
         
         // and the exit
-        game.load.image('exit', '../assets/exit.png');
+        game.load.image('exit', '../assets/under_the_boot/exit.png');
         
     },
     

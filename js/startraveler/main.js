@@ -20,12 +20,12 @@ var mainState = {
         
         
         // load the ship sprite
-        game.load.image('ship', 'assets/space_sled.png');
-        game.load.spritesheet('CCW_arrow', 'assets/CCW_arrow.png', 79, 60);
-        game.load.spritesheet('CW_arrow', 'assets/CW_arrow.png', 79, 60);
+        game.load.image('ship', '../assets/traveler/space_sled.png');
+        game.load.spritesheet('CCW_arrow', '../assets/traveler/CCW_arrow.png', 79, 60);
+        game.load.spritesheet('CW_arrow', '../assets/traveler/CW_arrow.png', 79, 60);
         
         // load the enemy image
-        game.load.image('enemy', 'assets/enemy.png');
+        game.load.image('enemy', '../assets/traveler/tumbling_cube.png');
         
     },
     
