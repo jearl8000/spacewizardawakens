@@ -5,7 +5,11 @@
         <title> Star Traveler </title>
         
         <script type="text/javascript" src="../js/phaser.min.js"></script>
-        <script type="text/javascript" src="../js/startraveler/main.js"></script>
+        
+        <script type="text/javascript" src="../js/traveler/Boot.js"></script>
+        <script type="text/javascript" src="../js/traveler/Preloader.js"></script>
+        <script type="text/javascript" src="../js/traveler/StartMenu.js"></script>
+        <script type="text/javascript" src="../js/traveler/main.js"></script>
         
     </head>
 
@@ -17,6 +21,17 @@
         <br /><br />
         
         <a href="../index.html">Back to Chapter List</a>
+        
+        <script type="text/javascript">
+            window.onload = function() {
+                var game = new Phaser.Game(800, 800, Phaser.AUTO, 'gameDiv');
+                game.state.add('Boot', StarTraveler.Boot);
+                game.state.add('Preloader', StarTraveler.Preloader);
+                game.state.add('StartMenu', StarTraveler.StartMenu);
+                game.state.add('main', StarTraveler.main);
+                game.state.start('Boot');
+            }
+        </script>
         
     </body>
 

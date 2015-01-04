@@ -5,6 +5,9 @@
         <title> Touch Sides to Steer </title>
         
         <script type="text/javascript" src="../js/phaser.min.js"></script>
+        <script type="text/javascript" src="../js/julesverne/Boot.js"></script>
+        <script type="text/javascript" src="../js/julesverne/Preloader.js"></script>
+        <script type="text/javascript" src="../js/julesverne/StartMenu.js"></script>
         <script type="text/javascript" src="../js/julesverne/main.js"></script>
         
     </head>
@@ -18,6 +21,17 @@
         <br /><br />
         
         <a href="../index.html">Back to Chapter List</a>
+        
+        <script type="text/javascript">
+            window.onload = function() {
+                var game = new Phaser.Game(600, 800, Phaser.AUTO, 'gameDiv');
+                game.state.add('Boot', JulesVerne.Boot);
+                game.state.add('Preloader', JulesVerne.Preloader);
+                game.state.add('StartMenu', JulesVerne.StartMenu);
+                game.state.add('main', JulesVerne.main);
+                game.state.start('Boot');
+            }
+        </script>
         
     </body>
 

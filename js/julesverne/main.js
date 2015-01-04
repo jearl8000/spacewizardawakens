@@ -1,46 +1,32 @@
 // Initialize Phaser, and create a 800 x 800 px game
-var game = new Phaser.Game(600, 800, Phaser.AUTO, 'gameDiv');
+// this is now done in the index.html
+// var game = new Phaser.Game(600, 800, Phaser.AUTO, 'gameDiv');
+
+JulesVerne.main = function(game) {};
 
 var cursors;
 var icebergs;
 
-// create our 'main' state that will contain the game
-var mainState = {
-    
-    preload: function () {
-        
-        // change the background color
-        game.stage.backgroundColor = '#000000';
-        
-        game.load.image('background', '../assets/europa/europa_background.png');
-        game.load.image('player', '../assets/europa/submarine.png');
-        
-        game.load.image('ice_sm', '../assets/europa/ice_1.png');
-        game.load.image('ice_md', '../assets/europa/ice_2.png');
-        game.load.image('ice_lg', '../assets/europa/ice_3.png');
-        game.load.image('eye_mine', '../assets/europa/eye_mine.png');
-
-        
-    },
+JulesVerne.main.prototype = {
     
     create: function () {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
         
-        game.add.tileSprite(0, 0, 600, 2000, 'background');
+        this.add.tileSprite(0, 0, 600, 2000, 'background');
 
-        game.world.setBounds(0, 0, 600, 2000);
+        this.world.setBounds(0, 0, 600, 2000);
         
 
         // set the physics system
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
         
         
         // display the player on the screen
         this.player = this.game.add.sprite(300, 100, 'player');
         this.player.anchor.set(0.5);
         
-        game.physics.arcade.enable(this.player, Phaser.Physics.ARCADE);
+        this.physics.arcade.enable(this.player, Phaser.Physics.ARCADE);
         
         // make the player's hitbox a little smaller
         this.player.body.setSize(80, 40, 20, 10);
@@ -48,50 +34,50 @@ var mainState = {
         
         
         // create group of obstacles
-        icebergs = game.add.group();
+        icebergs = this.add.group();
         icebergs.enableBody = true;
         icebergs.physicsBodyType = Phaser.Physics.ARCADE;
         for (var i = 0; i < 4; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(game.world.randomX, game.world.randomY, 'ice_sm');
+            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_sm');
             ice.name = 'obstacle' + i;
-            ice.body.velocity.x = game.rnd.integerInRange(-10, 10);
-            ice.body.velocity.y = game.rnd.integerInRange(-3, 3);
+            ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
+            ice.body.velocity.y = this.rnd.integerInRange(-3, 3);
         }
         
         for (var i = 0; i < 4; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(game.world.randomX, game.world.randomY, 'ice_md');
+            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_md');
             ice.name = 'obstacle' + i;
-            ice.body.velocity.x = game.rnd.integerInRange(-10, 10);
-            ice.body.velocity.y = game.rnd.integerInRange(-10, 10);
+            ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
+            ice.body.velocity.y = this.rnd.integerInRange(-10, 10);
         }
         for (var i = 0; i < 2; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(game.world.randomX, game.world.randomY, 'ice_lg');
-            ice.body.velocity.x = game.rnd.integerInRange(-10, 10);
-            ice.body.velocity.y = game.rnd.integerInRange(-3, 3);
+            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_lg');
+            ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
+            ice.body.velocity.y = this.rnd.integerInRange(-3, 3);
         }
         
         for (var i = 0; i < 4; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(game.world.randomX, game.rnd.integerInRange(1200,2000), 'eye_mine');
+            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(1200,2000), 'eye_mine');
             ice.name = 'obstacle' + i;
-            ice.body.velocity.x = game.rnd.integerInRange(-3, 3);
-            ice.body.velocity.y = game.rnd.integerInRange(-10, 10);
+            ice.body.velocity.x = this.rnd.integerInRange(-3, 3);
+            ice.body.velocity.y = this.rnd.integerInRange(-10, 10);
         }
         
         
         
         // add keys
-        cursors = game.input.keyboard.createCursorKeys();
+        cursors = this.input.keyboard.createCursorKeys();
         
         
-        game.camera.follow(this.player);
+        this.camera.follow(this.player);
 
     },
     
@@ -113,7 +99,7 @@ var mainState = {
         
         
         // object1, object2, collideCallback, processCallback, callbackContext
-        game.physics.arcade.collide(this.player, icebergs, this.collisionHandler, null, this);
+        this.physics.arcade.collide(this.player, icebergs, this.collisionHandler, null, this);
 
         // always moving down
         this.player.body.velocity.y = 100;
@@ -121,19 +107,19 @@ var mainState = {
         
         // first stab at some touch controls
         
-        if (game.input.activePointer.x < 200 && game.input.activePointer.isDown)
+        if (this.input.activePointer.x < 200 && this.input.activePointer.isDown)
         {
             this.player.body.velocity.x = -150;
             this.player.rotation = -(Math.PI/7);
         }
         
-        if (game.input.activePointer.x > 400 && game.input.activePointer.isDown)
+        if (this.input.activePointer.x > 400 && this.input.activePointer.isDown)
         {
             this.player.body.velocity.x = 150;
             this.player.rotation = Math.PI/7;
         }
         
-        else if (!game.input.activePointer.isDown)
+        else if (!this.input.activePointer.isDown)
         {
             //  Stand still
             // player.animations.stop();
@@ -204,7 +190,7 @@ var mainState = {
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
-        game.state.start('main');
+        this.state.start('main');
     },
     
     victory: function () {
@@ -218,45 +204,8 @@ var mainState = {
         // some kind of bad alert should happen
         alert("You lose!");
         this.restartGame();
-    },
-    /*
-    render: function() {
-        game.debug.text('pointer x:' + game.input.activePointer.x + ' pointer y:' + game.input.activePointer.y, 20, 20);
-        game.debug.text('pointer down:' + game.input.activePointer.isDown, 20, 40);
     }
-    */
-};
+}
 
 
-// Add and start the 'main' state to start the game
-game.state.add('main', mainState);
-game.state.start('main');
-    
-    
-
-/* quick brute force hardcoded coords for obstacles
-medium icebergs:
-64, 112
--6, 136
-388, 558
-484, 580
-6, 1016
-
-small icebergs
-360, 294
-0, 448
-254, 808
-520, 1354
-
-
-large icebergs
-292, 896
--10, 1428
-
-mines
-372, 1168
-510, 1462
-348, 1712
-110, 1898
-*/
     
