@@ -1,34 +1,16 @@
-// Initialize Phaser, and create a 800 x 800 px game
-var game = new Phaser.Game(800, 800, Phaser.AUTO, 'gameDiv');
+StarTraveler.main = function(game) {};
 
 var cursors;
 var center_x = 400;
 var center_y = 400;
-var radius = 250;
+var radius = 300;
 var theta = 0;
 
 var moveCW = false;
 var moveCCW = false;
 
-// create our 'main' state that will contain the game
-var mainState = {
-    
-    preload: function () {
-        
-        // change the background color
-        game.stage.backgroundColor = '#222222';
-        
-        
-        // load the ship sprite
-        game.load.image('ship', '../assets/traveler/space_sled.png');
-        game.load.spritesheet('CCW_arrow', '../assets/traveler/CCW_arrow.png', 79, 60);
-        game.load.spritesheet('CW_arrow', '../assets/traveler/CW_arrow.png', 79, 60);
-        
-        // load the enemy image
-        game.load.image('enemy', '../assets/traveler/tumbling_cube.png');
-        
-    },
-    
+StarTraveler.main.prototype = {
+
     create: function () {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
@@ -38,18 +20,21 @@ var mainState = {
 
         
         // set the physics system
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        
+        
+        this.add.tileSprite(0, 0, 800, 800, 'background');
 
         
         // create our virtual game controller buttons 
-        this.CW_arrow = game.add.button(20, 700, 'CW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
+        this.CW_arrow = this.add.button(20, 700, 'CW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
         this.CW_arrow.fixedToCamera = true;  //our buttons should stay on the same place  
         this.CW_arrow.events.onInputOver.add(function(){moveCW=true;});
         this.CW_arrow.events.onInputOut.add(function(){moveCW=false;});
         this.CW_arrow.events.onInputDown.add(function(){moveCW=true;});
         this.CW_arrow.events.onInputUp.add(function(){moveCW=false;});
         
-        this.CCW_arrow = game.add.button(700, 700, 'CCW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
+        this.CCW_arrow = this.add.button(700, 700, 'CCW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
         this.CCW_arrow.fixedToCamera = true;  //our buttons should stay on the same place  
         this.CCW_arrow.events.onInputOver.add(function(){moveCCW=true;});
         this.CCW_arrow.events.onInputOut.add(function(){moveCCW=false;});
@@ -59,7 +44,7 @@ var mainState = {
         // display the ship on the screen
         this.ship = this.game.add.sprite(start_x, start_y, 'ship');
 
-        game.physics.arcade.enable(this.ship);
+        this.physics.arcade.enable(this.ship);
         this.ship.anchor.set(0.5);
         this.ship.body.allowRotation = true;
         console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
@@ -67,7 +52,7 @@ var mainState = {
         
         
         // set up left and right keys to move ship
-        cursors = game.input.keyboard.createCursorKeys();
+        cursors = this.input.keyboard.createCursorKeys();
         
         
     },
@@ -115,7 +100,6 @@ var mainState = {
             // player.frame = 4;
         }
         
-        // game.physics.arcade.overlap(this.ship, this.pipes, this.restartGame, null, this);
     },
     
     
@@ -127,17 +111,12 @@ var mainState = {
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
-        game.state.start('main');
-    },
-    
+        this.state.start('main');
+    } 
     
     
     
 };
-
-// Add and start the 'main' state to start the game
-game.state.add('main', mainState);
-game.state.start('main');
     
     
     

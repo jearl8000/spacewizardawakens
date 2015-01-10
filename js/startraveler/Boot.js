@@ -5,7 +5,7 @@ StarTraveler.Boot = function(game) {};
 StarTraveler.Boot.prototype = {
     preload: function() {
         this.load.image('preloadBar', '../../assets/loader_bar.png');
-        this.load.image('titleimage', '../../assets/traveler/startraveler_title.png');
+        this.load.image('titleimage', '../../assets/traveler/traveler_title.png');
     },
     
     create: function() {
