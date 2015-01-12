@@ -19,18 +19,22 @@ StarTraveler.Preloader.prototype = {
         // change the background color
         this.stage.backgroundColor = '#222222';
         
-        // starting background image
-        this.load.image('background', '../../assets/traveler/star_traveler_tunnel1.png');
+        // three background images for the tunnel
+        this.load.image('tunnel1', '../../assets/traveler/star_traveler_tunnel1.png');
+        this.load.image('tunnel2', '../../assets/traveler/star_traveler_tunnel2.png');
+        this.load.image('tunnel3', '../../assets/traveler/star_traveler_tunnel3.png');
         
         // load the ship sprite
         this.load.image('ship', '../../assets/traveler/traveler_ship.png');
         
         // touch controls
-        this.load.spritesheet('CCW_arrow', '../../assets/traveler/CCW_arrow.png', 79, 60);
-        this.load.spritesheet('CW_arrow', '../../assets/traveler/CW_arrow.png', 79, 60);
+        // this.load.spritesheet('CCW_arrow', '../../assets/traveler/CCW_arrow.png', 79, 60);
+        // this.load.spritesheet('CW_arrow', '../../assets/traveler/CW_arrow.png', 79, 60);
+        this.load.spritesheet('CCW_arrow', '../../assets/traveler/traveler_ccw_arrow.png', 64, 64);
+        this.load.spritesheet('CW_arrow', '../../assets/traveler/traveler_cw_arrow.png', 64, 64);
         
-        // load the obstacle image
-        this.load.image('debris_cube', '../../assets/traveler/tumbling_cube.png');
+        // load the obstacles
+        this.load.spritesheet('debris_cube', '../../assets/traveler/tumbling_cube.png', 64, 64);
         
     },
     

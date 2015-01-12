@@ -1,60 +1,110 @@
-StarTraveler.main = function(game) {};
+StarTraveler.main = function(game) {
 
-var cursors;
-var center_x = 400;
-var center_y = 400;
-var radius = 300;
-var theta = 0;
+    this.cursors;
+    this.center_x = 400;
+    this.center_y = 400;
+    this.radius = 350;
+    this.theta = 0;
 
-var moveCW = false;
-var moveCCW = false;
+    this.moveCW = false;
+    this.moveCCW = false;
+
+    this.tunnelA;
+    this.tunnelB;
+    this.tunnelTimer;
+    this.tunnelFrame = 1;
+    
+    // group for our obstacles
+    this.spaceDebrisGroup;
+    this.maxDebris = 10;
+};
 
 StarTraveler.main.prototype = {
+    
+    swapTunnel: function() {
+        this.tunnelA.loadTexture('tunnel' + this.tunnelFrame);
+        //console.log('tunnel' + tunnelFrame);
+        
+        this.tunnelFrame++;
+        if (this.tunnelFrame > 3)
+        {
+            this.tunnelFrame = 1;
+        }
+        this.tunnelTimer.add(300, this.swapTunnel, this);
+    },
+    
+    
 
     create: function () {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
         
-        start_x = Math.sin( theta ) * radius + center_x;
-        start_y = Math.cos( theta ) * radius + center_y;
+        this.start_x = Math.sin( this.theta ) * this.radius + this.center_x;
+        this.start_y = Math.cos( this.theta ) * this.radius + this.center_y;
 
         
         // set the physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
         
         
-        this.add.tileSprite(0, 0, 800, 800, 'background');
+        this.tunnelA = this.add.sprite(0, 0, 'tunnel1');
 
+        //  Create timer for animating background
+        this.tunnelTimer = this.time.create(false);
+        
+        //  Set a TimerEvent to occur after .5 seconds
+        this.tunnelTimer.add(300, this.swapTunnel, this);
+
+        //  Start the timer running
+        this.tunnelTimer.start();
         
         // create our virtual game controller buttons 
         this.CW_arrow = this.add.button(20, 700, 'CW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
-        this.CW_arrow.fixedToCamera = true;  //our buttons should stay on the same place  
-        this.CW_arrow.events.onInputOver.add(function(){moveCW=true;});
-        this.CW_arrow.events.onInputOut.add(function(){moveCW=false;});
-        this.CW_arrow.events.onInputDown.add(function(){moveCW=true;});
-        this.CW_arrow.events.onInputUp.add(function(){moveCW=false;});
+        this.CW_arrow.fixedToCamera = true;  //our buttons should stay in the same place  
+        this.CW_arrow.events.onInputOver.add(function(){this.moveCW=true;},this);
+        this.CW_arrow.events.onInputOut.add(function(){this.moveCW=false;},this);
+        this.CW_arrow.events.onInputDown.add(function(){this.moveCW=true;},this);
+        this.CW_arrow.events.onInputUp.add(function(){this.moveCW=false;},this);
         
         this.CCW_arrow = this.add.button(700, 700, 'CCW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
-        this.CCW_arrow.fixedToCamera = true;  //our buttons should stay on the same place  
-        this.CCW_arrow.events.onInputOver.add(function(){moveCCW=true;});
-        this.CCW_arrow.events.onInputOut.add(function(){moveCCW=false;});
-        this.CCW_arrow.events.onInputDown.add(function(){moveCCW=true;});
-        this.CCW_arrow.events.onInputUp.add(function(){moveCCW=false;});
+        this.CCW_arrow.fixedToCamera = true;  
+        this.CCW_arrow.events.onInputOver.add(function(){this.moveCCW=true;},this);
+        this.CCW_arrow.events.onInputOut.add(function(){this.moveCCW=false;},this);
+        this.CCW_arrow.events.onInputDown.add(function(){this.moveCCW=true;},this);
+        this.CCW_arrow.events.onInputUp.add(function(){this.moveCCW=false;},this);
 
         // display the ship on the screen
-        this.ship = this.game.add.sprite(start_x, start_y, 'ship');
+        this.ship = this.game.add.sprite(this.start_x, this.start_y, 'ship');
 
         this.physics.arcade.enable(this.ship);
-        this.ship.anchor.set(0.5);
+        this.ship.anchor.set(0.5, 0.5);
         this.ship.body.allowRotation = true;
         console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
         
         
         
+        // start adding space rocks!
+        this.createObstacles();
+        
+        
         // set up left and right keys to move ship
         cursors = this.input.keyboard.createCursorKeys();
         
-        
+    },
+    
+    createObstacles: function() {
+        this.spaceDebrisGroup = this.add.group();
+        this.spaceDebrisGroup.enableBody = true;
+        for(var i=0; i<this.maxDebris; i++) {
+            var d = this.spaceDebrisGroup.create(this.center_x, this.center_y, 'debris_cube');
+            d.anchor.setTo(0.5, 0.5);
+            this.physics.enable(d, Phaser.Physics.ARCADE);
+            d.enableBody = true;
+            d.animations.add('Tumble', [0, 1, 2, 3, 4, 5], 6, true);
+            d.animations.play('Tumble', 16, true);
+            d.body.velocity.x = this.rnd.integerInRange(-100, 100);
+            d.body.velocity.y = this.rnd.integerInRange(-100, 100);
+        }
     },
     
     update: function () {
@@ -66,28 +116,26 @@ StarTraveler.main.prototype = {
             this.restartGame();
         }
         
-        if (cursors.left.isDown || moveCW)
+        if (cursors.left.isDown || this.moveCW)
         {
             //  Move clockwise
             // this.ship.body.velocity.x = -150;
-            theta = theta - Math.PI/90;
-            this.ship.body.x = Math.sin( theta ) * radius + center_x - 32;
-            this.ship.body.y = Math.cos( theta ) * radius + center_y - 32;
-            this.ship.rotation = -theta;
+            this.theta = this.theta - Math.PI/90;
+            this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
+            this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
+            this.ship.rotation = -this.theta;
     //        console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
 
-            // dude.animations.play('left');
         }
-        else if (cursors.right.isDown || moveCCW)
+        else if (cursors.right.isDown || this.moveCCW)
         {
             //  Move counter-clockwise
             // this.ship.body.velocity.x = 150;
-            theta = theta + Math.PI/90;
-            this.ship.body.x = Math.sin( theta ) * radius + center_x - 32;
-            this.ship.body.y = Math.cos( theta ) * radius + center_y - 32;
-            this.ship.rotation = -theta;
+            this.theta = this.theta + Math.PI/90;
+            this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
+            this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
+            this.ship.rotation = -this.theta;
 
-            // player.animations.play('right');
         }
         
         else
@@ -102,12 +150,12 @@ StarTraveler.main.prototype = {
         
     },
     
-    
+    /*
     render: function () {
-        // game.debug.bodyInfo(this.ship, 32, 32);
-        // game.debug.body(this.ship);
+        this.game.debug.bodyInfo(this.ship, 32, 32);
+        this.game.debug.body(this.ship);
     },
-    
+    */
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
