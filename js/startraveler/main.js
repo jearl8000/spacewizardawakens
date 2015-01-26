@@ -17,6 +17,7 @@ StarTraveler.main = function(game) {
     // group for our obstacles
     this.spaceDebrisGroup;
     this.maxDebris = 10;
+    this.debrisTimer;
 };
 
 StarTraveler.main.prototype = {
@@ -52,7 +53,7 @@ StarTraveler.main.prototype = {
         //  Create timer for animating background
         this.tunnelTimer = this.time.create(false);
         
-        //  Set a TimerEvent to occur after .5 seconds
+        //  Set a TimerEvent to occur after .3 seconds
         this.tunnelTimer.add(300, this.swapTunnel, this);
 
         //  Start the timer running
@@ -84,7 +85,20 @@ StarTraveler.main.prototype = {
         
         
         // start adding space rocks!
-        this.createObstacles();
+        this.spaceDebrisGroup = this.add.group();
+        this.spaceDebrisGroup.enableBody = true;
+        
+        //  Create timer for animating background
+        this.debrisTimer = this.time.create(false);
+        
+        //  Set a TimerEvent to occur after 1 second
+        this.debrisTimer.add(1000, this.createObstacle, this);
+
+        //  Start the timer running
+        this.debrisTimer.start();
+        
+        
+        //this.createObstacles();
         
         
         // set up left and right keys to move ship
@@ -92,6 +106,7 @@ StarTraveler.main.prototype = {
         
     },
     
+    /* deprecated; this creates a burst of debris at once
     createObstacles: function() {
         this.spaceDebrisGroup = this.add.group();
         this.spaceDebrisGroup.enableBody = true;
@@ -105,6 +120,35 @@ StarTraveler.main.prototype = {
             d.body.velocity.x = this.rnd.integerInRange(-100, 100);
             d.body.velocity.y = this.rnd.integerInRange(-100, 100);
         }
+    },
+    */
+    
+    createObstacle: function() {
+        // pick a random direction from center
+        var debrisDegree = this.rnd.integerInRange(0, 360);
+        var debrisType = ['debris_cube', 'debris_rock'];
+        var t = this.rnd.integerInRange(0, 1);
+            
+        var d = this.spaceDebrisGroup.create(this.center_x, this.center_y, debrisType[t]);
+        d.anchor.setTo(0.5, 0.5);
+        this.physics.enable(d, Phaser.Physics.ARCADE);
+        d.enableBody = true;
+        if (t == 0) {
+            d.animations.add('Tumble', [0, 1, 2, 3, 4, 5], 6, true);
+            d.animations.play('Tumble', 16, true);
+        }
+        else {
+            d.animations.add('Tumble2', [0, 1, 2, 3, 4, 5], 6, true);
+            d.animations.play('Tumble2', 16, true);    
+        }
+        d.body.velocity.x = Math.sin( debrisDegree ) * 120;
+        d.body.velocity.y = Math.cos( debrisDegree ) * 120;
+        // this.theta instead of debrisDegree would have them come right at the player
+        
+        d.body.angularVelocity = this.rnd.integerInRange(-150, 150);
+            
+        this.debrisTimer.add(700, this.createObstacle, this);
+        
     },
     
     update: function () {
