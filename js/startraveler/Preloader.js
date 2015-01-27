@@ -35,7 +35,7 @@ StarTraveler.Preloader.prototype = {
         
         // load the obstacles
         this.load.spritesheet('debris_cube', '../../assets/traveler/tumbling_cube.png', 64, 64);
-        this.load.spritesheet('debris_rock', '../../assets/traveler/tumbling_rock.png', 64, 48);
+        this.load.spritesheet('debris_rock', '../../assets/traveler/spacerock2_512x64.png', 64, 64);
         
     },
     

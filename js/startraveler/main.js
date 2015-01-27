@@ -135,11 +135,11 @@ StarTraveler.main.prototype = {
         d.enableBody = true;
         if (t == 0) {
             d.animations.add('Tumble', [0, 1, 2, 3, 4, 5], 6, true);
-            d.animations.play('Tumble', 16, true);
+            d.animations.play('Tumble', 8, true);
         }
         else {
-            d.animations.add('Tumble2', [0, 1, 2, 3, 4, 5], 6, true);
-            d.animations.play('Tumble2', 16, true);    
+            d.animations.add('Tumble2', [0, 1, 2, 3, 4, 5, 6, 7], 8, true);
+            d.animations.play('Tumble2', 8, true);    
         }
         d.body.velocity.x = Math.sin( debrisDegree ) * 120;
         d.body.velocity.y = Math.cos( debrisDegree ) * 120;
