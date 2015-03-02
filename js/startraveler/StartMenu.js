@@ -9,7 +9,7 @@ StarTraveler.StartMenu.prototype = {
         startBG.inputEnabled = true;
         startBG.events.onInputDown.addOnce(this.startGame, this);
         
-        startPrompt = this.add.bitmapText(this.world.centerX-130, this.world.centerY+100, '8bitwonderwhite', 'Touch to Start!', 20);
+        startPrompt = this.add.bitmapText(this.world.centerX-125, this.world.centerY+100, '8bitwonderwhite', 'Touch to Start!', 20);
     },
     
     startGame: function(pointer) {

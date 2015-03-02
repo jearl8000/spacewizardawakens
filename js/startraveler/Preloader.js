@@ -25,7 +25,7 @@ StarTraveler.Preloader.prototype = {
         this.load.image('tunnel3', '../../assets/traveler/star_traveler_tunnel3.png');
         
         // load the ship sprite
-        this.load.image('ship', '../../assets/traveler/traveler_ship.png');
+        this.load.image('ship', '../../assets/traveler/traveler_ship2.png');
         
         // touch controls
         // this.load.spritesheet('CCW_arrow', '../../assets/traveler/CCW_arrow.png', 79, 60);

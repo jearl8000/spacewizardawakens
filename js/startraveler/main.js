@@ -4,7 +4,7 @@ StarTraveler.main = function(game) {
     this.center_x = 400;
     this.center_y = 400;
     this.radius = 350;
-    this.theta = 0;
+    this.theta;
 
     this.moveCW = false;
     this.moveCCW = false;
@@ -18,6 +18,11 @@ StarTraveler.main = function(game) {
     this.spaceDebrisGroup;
     this.maxDebris = 10;
     this.debrisTimer;
+    
+    // time till victory, and status text 
+    this.countdown;
+    this.countdownTimer;
+    this.countdownText;
 };
 
 StarTraveler.main.prototype = {
@@ -39,6 +44,9 @@ StarTraveler.main.prototype = {
     create: function () {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
+        
+        // initialize ship position
+        this.theta = 0;
         
         this.start_x = Math.sin( this.theta ) * this.radius + this.center_x;
         this.start_y = Math.cos( this.theta ) * this.radius + this.center_y;
@@ -80,7 +88,7 @@ StarTraveler.main.prototype = {
         this.physics.arcade.enable(this.ship);
         this.ship.anchor.set(0.5, 0.5);
         this.ship.body.allowRotation = true;
-        console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
+        // console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
         
         
         
@@ -88,40 +96,30 @@ StarTraveler.main.prototype = {
         this.spaceDebrisGroup = this.add.group();
         this.spaceDebrisGroup.enableBody = true;
         
-        //  Create timer for animating background
+        //  Create timer for spawning debris
         this.debrisTimer = this.time.create(false);
         
-        //  Set a TimerEvent to occur after 1 second
-        this.debrisTimer.add(1000, this.createObstacle, this);
+        //  give the player a moment before penting them with space rocks
+        this.debrisTimer.add(800, this.createObstacle, this);
 
         //  Start the timer running
         this.debrisTimer.start();
         
         
-        //this.createObstacles();
-        
-        
         // set up left and right keys to move ship
         cursors = this.input.keyboard.createCursorKeys();
         
+        
+        this.countdown = 30;
+        this.countdownTimer = this.time.create(false);
+        this.countdownTimer.loop(1000, this.updateCountdown, this);
+        this.countdownTimer.start();
+        this.countdownText = this.add.bitmapText(10, 10, '8bitwonderwhite', this.countdown + ' Seconds till Escape', 16);
+        
+        
     },
     
-    /* deprecated; this creates a burst of debris at once
-    createObstacles: function() {
-        this.spaceDebrisGroup = this.add.group();
-        this.spaceDebrisGroup.enableBody = true;
-        for(var i=0; i<this.maxDebris; i++) {
-            var d = this.spaceDebrisGroup.create(this.center_x, this.center_y, 'debris_cube');
-            d.anchor.setTo(0.5, 0.5);
-            this.physics.enable(d, Phaser.Physics.ARCADE);
-            d.enableBody = true;
-            d.animations.add('Tumble', [0, 1, 2, 3, 4, 5], 6, true);
-            d.animations.play('Tumble', 16, true);
-            d.body.velocity.x = this.rnd.integerInRange(-100, 100);
-            d.body.velocity.y = this.rnd.integerInRange(-100, 100);
-        }
-    },
-    */
+    
     
     createObstacle: function() {
         // pick a random direction from center
@@ -146,9 +144,22 @@ StarTraveler.main.prototype = {
         // this.theta instead of debrisDegree would have them come right at the player
         
         d.body.angularVelocity = this.rnd.integerInRange(-150, 150);
-            
-        this.debrisTimer.add(700, this.createObstacle, this);
         
+        // scale that debris up
+        this.add.tween(d.scale).to( { x: 3, y: 3 }, 2000, Phaser.Easing.Linear.None, true, 0, -1, false);
+            
+        this.debrisTimer.add(600, this.createObstacle, this);
+        
+    },
+    
+    updateCountdown: function() {
+        if (this.countdown <= 0) { // you win!
+            alert("You escaped! play again?");
+            this.restartGame(); 
+         } else {
+             this.countdownText.setText(this.countdown + ' Seconds till Escape');
+             this.countdown --;
+         }
     },
     
     update: function () {
@@ -159,6 +170,9 @@ StarTraveler.main.prototype = {
         if (this.ship.inWorld === false) {
             this.restartGame();
         }
+        
+        // object1, object2, collideCallback, processCallback, callbackContext
+        this.physics.arcade.collide(this.ship, this.spaceDebrisGroup, this.collisionHandler, null, this);
         
         if (cursors.left.isDown || this.moveCW)
         {
@@ -192,7 +206,20 @@ StarTraveler.main.prototype = {
             // player.frame = 4;
         }
         
+        
+        
     },
+    
+    collisionHandler: function(player, obstacle) {
+        alert("SPACEROCK'D! Try again.");
+        this.restartGame();        
+    },
+    
+    restartGame: function () {
+        // start the 'main' state, which restarts the game
+        this.state.start('main');
+    },
+    
     
     /*
     render: function () {
@@ -200,6 +227,8 @@ StarTraveler.main.prototype = {
         this.game.debug.body(this.ship);
     },
     */
+    
+    
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
