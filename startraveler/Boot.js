@@ -1,11 +1,11 @@
-var JulesVerne = {};
+var StarTraveler = {};
 
-JulesVerne.Boot = function(game) {};
+StarTraveler.Boot = function(game) {};
 
-JulesVerne.Boot.prototype = {
+StarTraveler.Boot.prototype = {
     preload: function() {
-        this.load.image('preloadBar', '../../assets/loader_bar.png');
-        this.load.image('titleimage', '../../assets/europa/julesverne_title.png');
+        this.load.image('preloadBar', '../assets/loader_bar.png');
+        this.load.image('titleimage', 'assets/traveler_title.png');
     },
     
     create: function() {
