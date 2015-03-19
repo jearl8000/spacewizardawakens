@@ -21,7 +21,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"..\/..\/..\/..\/Documents\/pixel drawings\/pink_blue_32_tile.png",
+         "image":"pink_blue_32_tile.png",
          "imageheight":32,
          "imagewidth":128,
          "margin":0,

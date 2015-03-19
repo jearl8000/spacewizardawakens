@@ -1,0 +1,35 @@
+
+@font-face {
+  font-family: "04b03Regular";
+  src: url("../assets/04B_03__.TTF");
+}
+
+body {
+    background-color: black;
+    font-family: "04b03Regular";
+    color: white;
+    font-size: 18px;
+}
+
+#splash {
+    text-align: center;
+}
+
+#chapter_main {
+    text-align: center;
+}
+
+#gameDiv {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a:link {
+    color: white;
+}
+a:visited {
+    color: #D0E2FF;
+}
+a:hover {
+    text-decoration: none;
+}
