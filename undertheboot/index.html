@@ -7,6 +7,9 @@
         <link rel="stylesheet" type="text/css" href="../css/styles_main.css" media="all" />
         
         <script type="text/javascript" src="../js/phaser.min.js"></script>
+        <script type="text/javascript" src="Boot.js"></script>
+        <script type="text/javascript" src="Preloader.js"></script>
+        <script type="text/javascript" src="StartMenu.js"></script>
         <script type="text/javascript" src="main.js"></script>
         
     </head>
@@ -23,6 +26,17 @@
             <a href="../index.html">Back to Chapter List</a>
 
         </div>
+        
+        <script type="text/javascript">
+            window.onload = function() {
+                var game = new Phaser.Game(800, 800, Phaser.AUTO, 'gameDiv');
+                game.state.add('Boot', UnderTheBoot.Boot);
+                game.state.add('Preloader', UnderTheBoot.Preloader);
+                game.state.add('StartMenu', UnderTheBoot.StartMenu);
+                game.state.add('main', UnderTheBoot.main);
+                game.state.start('Boot');
+            }
+        </script>
         
     </body>
 

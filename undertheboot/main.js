@@ -1,43 +1,14 @@
-// Initialize Phaser, and create a 800 x 800 px game
-var game = new Phaser.Game(800, 800, Phaser.AUTO, 'gameDiv');
+UnderTheBoot.main = function(game) {};
 
 var cursors;
 
-// create our 'main' state that will contain the game
-var mainState = {
-    
-    preload: function () {
+UnderTheBoot.main.prototype = {
         
-        // change the background color
-        game.stage.backgroundColor = '#000000';
-        
-        // game.load.tilemap('map', 'assets/maze_run.json', null, Phaser.Tilemap.TILED_JSON);
-        // game.load.image('tiles_doodle32x32x6', 'assets/tiles_doodle32x32x6.png');
-        
-        
-        game.load.tilemap('map', 'assets/under_the_boot.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('pink_blue_32_tile', 'assets/pink_blue_32_tile.png');
-        
-        
-        // load the player sprite
-        // game.load.image('dude', 'assets/ship.png');
-        // game.load.spritesheet('dude', 'assets/redman_run_sheet.png', 32, 32);
-        game.load.spritesheet('dude', 'assets/running_suit_32_32_11.png', 32, 32);
-        
-        // load the enemy image
-        // game.load.image('enemy', 'assets/enemy.png');
-        game.load.image('spotlight', 'assets/spotlight_dithered_128.png');
-        
-        // and the exit
-        game.load.image('exit', 'assets/exit.png');
-        
-    },
-    
     create: function () {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
         
-        map = game.add.tilemap('map');
+        map = this.add.tilemap('map');
 
         map.addTilesetImage('pink_blue_32_tile');
 
@@ -48,17 +19,17 @@ var mainState = {
         layer.resizeWorld();
 
         // set the physics system
-        game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
         
         // display the player on the screen
         this.dude = this.game.add.sprite(50, 700, 'dude');
         this.dude.anchor.set(0.5);
         
-        game.physics.arcade.enable(this.dude);
+        this.physics.arcade.enable(this.dude);
         
         //where's the exit
         this.exit = this.game.add.sprite(680, 180, 'exit');
-        game.physics.enable(this.exit, Phaser.Physics.ARCADE);
+        this.physics.enable(this.exit, Phaser.Physics.ARCADE);
         
         // display the enemy on the screen
         // this.spotlight = this.game.add.sprite(100, 100, 'spotlight');
@@ -68,7 +39,7 @@ var mainState = {
         this.spotlight.anchor.set(0.5);
         this.spotlight.checkWorldBounds = true;
         
-        game.physics.enable(this.spotlight, Phaser.Physics.ARCADE);
+        this.physics.enable(this.spotlight, Phaser.Physics.ARCADE);
 
         this.spotlight.body.collideWorldBounds = true;
         this.spotlight.body.bounce.set(1);
@@ -87,7 +58,7 @@ var mainState = {
         
 
         // add keys
-        cursors = game.input.keyboard.createCursorKeys();
+        cursors = this.input.keyboard.createCursorKeys();
 
     },
     
@@ -95,7 +66,7 @@ var mainState = {
         // This function is called 60 times a second
         // It contains the game logic
         
-        game.physics.arcade.collide(this.dude, layer);
+        this.physics.arcade.collide(this.dude, layer);
         
         // If the man leaves the world, call the 'restartGame' function
         if (this.dude.inWorld === false) {
@@ -111,10 +82,10 @@ var mainState = {
             // game.physics.arcade.moveToPointer(this.dude, 350);
             
             //  If the sprite is > 8px away from the pointer then let's move to it
-            if (game.physics.arcade.distanceToPointer(this.dude, game.input.activePointer) > 8)
+            if (this.physics.arcade.distanceToPointer(this.dude, this.input.activePointer) > 8)
             {
                 //  Make the object seek to the active pointer (mouse or touch).
-                game.physics.arcade.moveToPointer(this.dude, 300);
+                this.physics.arcade.moveToPointer(this.dude, 300);
             }
             else
             {
@@ -124,12 +95,12 @@ var mainState = {
             }
 
             // run left if the pointer's to the left
-            if (this.dude.body.x > game.input.x && game.physics.arcade.distanceToPointer(this.dude, game.input.activePointer) > 8) {
+            if (this.dude.body.x > this.input.x && this.physics.arcade.distanceToPointer(this.dude, this.input.activePointer) > 8) {
                 this.dude.animations.play('left');  
             }
         
             // run right if the pointer's to the right
-            if (this.dude.body.x < game.input.x && game.physics.arcade.distanceToPointer(this.dude, game.input.activePointer) > 8) {
+            if (this.dude.body.x < this.input.x && this.physics.arcade.distanceToPointer(this.dude, this.input.activePointer) > 8) {
                 this.dude.animations.play('right');  
             }
         
@@ -181,13 +152,13 @@ var mainState = {
             // player.frame = 4;
         }
         
-        game.physics.arcade.overlap(this.dude, this.exit, this.victory, null, this);
-        game.physics.arcade.overlap(this.dude, this.spotlight, this.defeat, null, this);
+        this.physics.arcade.overlap(this.dude, this.exit, this.victory, null, this);
+        this.physics.arcade.overlap(this.dude, this.spotlight, this.defeat, null, this);
     },
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
-        game.state.start('main');
+        this.state.start('main');
         this.dude.animations.play('idle');
     },
     
@@ -205,10 +176,6 @@ var mainState = {
     }
     
 };
-
-// Add and start the 'main' state to start the game
-game.state.add('main', mainState);
-game.state.start('main');
     
     
     

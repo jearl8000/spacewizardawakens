@@ -23,6 +23,8 @@ StarTraveler.main = function(game) {
     this.countdown;
     this.countdownTimer;
     this.countdownText;
+    
+    this.defeated = false;
 };
 
 StarTraveler.main.prototype = {
@@ -75,7 +77,7 @@ StarTraveler.main.prototype = {
         this.CW_arrow.events.onInputDown.add(function(){this.moveCW=true;},this);
         this.CW_arrow.events.onInputUp.add(function(){this.moveCW=false;},this);
         
-        this.CCW_arrow = this.add.button(700, 700, 'CCW_arrow', null, this, 0, 0, 0, 0);  //game, x, y, key, callback, callbackContext, overFrame, outFrame, downFrame, upFrame
+        this.CCW_arrow = this.add.button(700, 700, 'CCW_arrow', null, this, 0, 0, 0, 0); 
         this.CCW_arrow.fixedToCamera = true;  
         this.CCW_arrow.events.onInputOver.add(function(){this.moveCCW=true;},this);
         this.CCW_arrow.events.onInputOut.add(function(){this.moveCCW=false;},this);
@@ -84,6 +86,9 @@ StarTraveler.main.prototype = {
 
         // display the ship on the screen
         this.ship = this.game.add.sprite(this.start_x, this.start_y, 'ship');
+        this.ship.animations.add('Fly', [0, 1, 2, 3], 4, true);
+        this.ship.animations.add('Dead', [4], 1, true);
+        this.ship.animations.play('Fly', 4, true);
 
         this.physics.arcade.enable(this.ship);
         this.ship.anchor.set(0.5, 0.5);
@@ -122,6 +127,10 @@ StarTraveler.main.prototype = {
     
     
     createObstacle: function() {
+        // stop creating obstacles when the player is almost out of the tunnel
+        if (this.countdown <= 3) {
+            return;
+        }
         // pick a random direction from center
         var debrisDegree = this.rnd.integerInRange(0, 360);
         var debrisType = ['debris_cube', 'debris_rock'];
@@ -146,16 +155,17 @@ StarTraveler.main.prototype = {
         d.body.angularVelocity = this.rnd.integerInRange(-150, 150);
         
         // scale that debris up
-        this.add.tween(d.scale).to( { x: 3, y: 3 }, 2000, Phaser.Easing.Linear.None, true, 0, -1, false);
+        this.add.tween(d.scale).to( { x: 3, y: 3 }, 2500, Phaser.Easing.Linear.None, true, 0, -1, false);
             
         this.debrisTimer.add(600, this.createObstacle, this);
         
     },
     
     updateCountdown: function() {
-        if (this.countdown <= 0) { // you win!
-            alert("You escaped! play again?");
-            this.restartGame(); 
+        if (this.countdown < 0) { // you win!
+            this.state.start('EndMenu');
+            // alert("You escaped! play again?");
+            // this.restartGame(); 
          } else {
              this.countdownText.setText(this.countdown + ' Seconds till Escape');
              this.countdown --;
@@ -163,60 +173,57 @@ StarTraveler.main.prototype = {
     },
     
     update: function () {
-        // This function is called 60 times a second
-        // It contains the game logic
-        
-        // If the ship is out of the world, call the 'restartGame' function
-        if (this.ship.inWorld === false) {
-            this.restartGame();
-        }
-        
-        // object1, object2, collideCallback, processCallback, callbackContext
-        this.physics.arcade.collide(this.ship, this.spaceDebrisGroup, this.collisionHandler, null, this);
-        
-        if (cursors.left.isDown || this.moveCW)
-        {
-            //  Move clockwise
-            // this.ship.body.velocity.x = -150;
-            this.theta = this.theta - Math.PI/90;
-            this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
-            this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
-            this.ship.rotation = -this.theta;
-    //        console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
+        if (this.defeated === false) {
 
-        }
-        else if (cursors.right.isDown || this.moveCCW)
-        {
-            //  Move counter-clockwise
-            // this.ship.body.velocity.x = 150;
-            this.theta = this.theta + Math.PI/90;
-            this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
-            this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
-            this.ship.rotation = -this.theta;
+            // If the ship is out of the world, call the 'restartGame' function
+            if (this.ship.inWorld === false) {
+                this.restartGame();
+            }
 
-        }
-        
-        else
-        {
-            //  Stand still
-            // this.ship.body.velocity.x = 0;
-            // this.ship.body.angularVelocity = 0;
-            // player.animations.stop();
+            // object1, object2, collideCallback, processCallback, callbackContext
+            this.physics.arcade.collide(this.ship, this.spaceDebrisGroup, this.collisionHandler, null, this);
 
-            // player.frame = 4;
+            if (cursors.left.isDown || this.moveCW)
+            {
+                //  Move clockwise
+                // this.ship.body.velocity.x = -150;
+                this.theta = this.theta - Math.PI/90;
+                this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
+                this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
+                this.ship.rotation = -this.theta;
+        //        console.log(this.ship.anchor, this.ship.body.x, this.ship.body.y);
+
+            }
+            else if (cursors.right.isDown || this.moveCCW)
+            {
+                //  Move counter-clockwise
+                // this.ship.body.velocity.x = 150;
+                this.theta = this.theta + Math.PI/90;
+                this.ship.body.x = Math.sin( this.theta ) * this.radius + this.center_x - 48;
+                this.ship.body.y = Math.cos( this.theta ) * this.radius + this.center_y - 32;
+                this.ship.rotation = -this.theta;
+
+            }
+    
         }
-        
-        
         
     },
     
     collisionHandler: function(player, obstacle) {
-        alert("SPACEROCK'D! Try again.");
-        this.restartGame();        
+        this.ship.animations.stop('Fly', 0);
+        this.ship.animations.play('Dead', 1, true);
+        var defeatMessage = this.add.image (this.world.centerX-170, this.world.centerY-100, 'defeat_message');
+        defeatMessage.inputEnabled = true;
+        this.defeated = true;
+        defeatMessage.events.onInputDown.addOnce(this.restartGame, this);
+        
+        // alert("SPACEROCK'D! Try again.");
+        // this.restartGame();        
     },
     
     restartGame: function () {
         // start the 'main' state, which restarts the game
+        this.defeated = false;
         this.state.start('main');
     },
     
@@ -227,13 +234,6 @@ StarTraveler.main.prototype = {
         this.game.debug.body(this.ship);
     },
     */
-    
-    
-    
-    restartGame: function () {
-        // start the 'main' state, which restarts the game
-        this.state.start('main');
-    } 
     
     
     
