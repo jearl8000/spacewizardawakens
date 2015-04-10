@@ -9,7 +9,7 @@ StarTraveler.Preloader.prototype = {
     preload: function() {
         this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloadBar');
         this.preloadBar.anchor.setTo(0.5, 0.5);
-        this.load.setPreloadSprite(this.preloadBar);
+        this.load.setPreloadSprite(this.preloadBar, 0);
         this.titleText = this.add.image(this.world.centerX, this.world.centerY-100, 'titleimage');
         this.titleText.anchor.setTo(0.5, 0.5);
         this.load.image('titlescreen', 'assets/star_traveler_title.png');
