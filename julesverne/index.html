@@ -2,16 +2,18 @@
 
 <html>
     <head>
-        <title> Touch Sides to Steer </title>
+        <title> 3015 / Jules Verne </title>
         
         <link rel="stylesheet" type="text/css" href="../css/styles_main.css" media="all" />
         
         
-        <script type="text/javascript" src="../js/phaser.min.js"></script>
+        <!-- <script type="text/javascript" src="../js/phaser.min.js"></script> -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.3.0/phaser.min.js"></script>
         <script type="text/javascript" src="Boot.js"></script>
         <script type="text/javascript" src="Preloader.js"></script>
         <script type="text/javascript" src="StartMenu.js"></script>
         <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="EndScene.js"></script>
         
     </head>
 
@@ -37,6 +39,7 @@
                 game.state.add('Preloader', JulesVerne.Preloader);
                 game.state.add('StartMenu', JulesVerne.StartMenu);
                 game.state.add('main', JulesVerne.main);
+                game.state.add('EndScene', JulesVerne.EndScene);
                 game.state.start('Boot');
             }
         </script>

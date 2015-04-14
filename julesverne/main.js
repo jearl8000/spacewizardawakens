@@ -5,6 +5,7 @@
 JulesVerne.main = function(game) {
 
 this.defeated;
+this.maxDepth = 2000;
 
 };
 
@@ -19,9 +20,11 @@ JulesVerne.main.prototype = {
         // This function is called after the preload function
         // Here we set up the game, display sprites, etc.
         
+        this.stage.backgroundColor = '#0A9CB1';
+        
         this.add.tileSprite(0, 0, 600, 2000, 'background');
 
-        this.world.setBounds(0, 0, 600, 2000);
+        this.world.setBounds(0, 0, 600, this.maxDepth + 100);
         
 
         // set the physics system
@@ -46,27 +49,27 @@ JulesVerne.main.prototype = {
         icebergs = this.add.group();
         icebergs.enableBody = true;
         icebergs.physicsBodyType = Phaser.Physics.ARCADE;
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < 6; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_sm');
+            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(150,this.maxDepth), 'ice_sm');
             ice.name = 'obstacle' + i;
             ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
             ice.body.velocity.y = this.rnd.integerInRange(-3, 3);
         }
         
-        for (var i = 0; i < 4; i++)
+        for (var i = 0; i < 5; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_md');
+            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(150,this.maxDepth), 'ice_md');
             ice.name = 'obstacle' + i;
             ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
             ice.body.velocity.y = this.rnd.integerInRange(-10, 10);
         }
-        for (var i = 0; i < 2; i++)
+        for (var i = 0; i < 3; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(this.world.randomX, this.world.randomY, 'ice_lg');
+            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(250,this.maxDepth), 'ice_lg');
             ice.body.velocity.x = this.rnd.integerInRange(-10, 10);
             ice.body.velocity.y = this.rnd.integerInRange(-3, 3);
         }
@@ -74,7 +77,7 @@ JulesVerne.main.prototype = {
         for (var i = 0; i < 4; i++)
         {
             //  Create a new sprite at a random world location
-            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(1200,2000), 'eye_mine');
+            var ice = icebergs.create(this.world.randomX, this.rnd.integerInRange(1200,this.maxDepth), 'eye_mine');
             ice.name = 'obstacle' + i;
             ice.body.velocity.x = this.rnd.integerInRange(-3, 3);
             ice.body.velocity.y = this.rnd.integerInRange(-10, 10);
@@ -164,8 +167,12 @@ JulesVerne.main.prototype = {
                 this.restartGame();
             }*/
             
-            if (this.player.inWorld === false) {
+            if (this.player.body.x < -100 || this.player.body.x > 700) {
                 this.offScreenHandler();
+            }
+            
+            if (this.player.body.y > this.maxDepth + 150) { // player reached bottom of world 
+                this.victory();
             }
             
         }
@@ -198,10 +205,10 @@ JulesVerne.main.prototype = {
     },
     
     victory: function () {
-        // some kind of good alert should happen
-        alert("You win!");
-        
-        this.restartGame();
+        // alert("You win!");
+        // this.restartGame();
+        this.state.start('EndScene');
+
     },
     
 }

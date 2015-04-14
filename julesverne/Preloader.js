@@ -7,6 +7,7 @@ JulesVerne.Preloader = function(game) {
 JulesVerne.Preloader.prototype = {
     
     preload: function() {
+        this.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
         this.preloadBar = this.add.sprite(this.world.centerX, this.world.centerY, 'preloadBar');
         this.preloadBar.anchor.setTo(0.5, 0.5);
         this.load.setPreloadSprite(this.preloadBar, 0);
@@ -35,6 +36,12 @@ JulesVerne.Preloader.prototype = {
         this.load.image('ice_md', 'assets/ice_2.png');
         this.load.image('ice_lg', 'assets/ice_3.png');
         this.load.image('eye_mine', 'assets/eye_mine.png');
+        
+        this.load.image('drillsub', 'assets/drillsub.png');
+        this.load.image('rebel_sub', 'assets/rebel_sub.png');
+        this.load.image('nautilus', 'assets/nautilus.png');
+        
+        
     },
     
     create: function() {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Space Wizard Awakens </title>
+        
+        <link rel="stylesheet" type="text/css" href="../css/styles_main.css" media="all" />
+        
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.3.0/phaser.min.js"></script>
+        <script type="text/javascript" src="Boot.js"></script>
+        <script type="text/javascript" src="Preloader.js"></script>
+        <script type="text/javascript" src="StartMenu.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+        
+    </head>
+
+    <body>
+        <h1>Space Wizard Awakens</h1>
+        
+        <div id="chapter_main">
+
+            <h2> Match the Sequence. Unlock the Tomb. </h2>
+
+            <div id="gameDiv" style="width: 800px; height: 800px;"></div>
+
+            <br /><br />
+
+            <a href="../index.html">Back to Chapter List</a>
+        
+        </div>
+        
+        <script type="text/javascript">
+            window.onload = function() {
+                var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameDiv');
+                game.state.add('Boot', Awaken.Boot);
+                game.state.add('Preloader', Awaken.Preloader);
+                game.state.add('StartMenu', Awaken.StartMenu);
+                game.state.add('main', Awaken.main);
+                game.state.start('Boot');
+            }
+        </script>
+        
+    </body>
+
+</html>
