@@ -12,9 +12,22 @@ Awaken.Preloader.prototype = {
         this.load.setPreloadSprite(this.preloadBar, 0);
         this.titleText = this.add.image(this.world.centerX, this.world.centerY-100, 'titleimage');
         this.titleText.anchor.setTo(0.5, 0.5);
-        this.load.image('titlescreen', 'assets/awaken_main_title.png');
+        this.load.image('titlescreen', 'assets/main_title.png');
 
         this.load.image('background', 'assets/jupiter_background.png');
+        
+        this.load.image('light_blue', 'assets/light_blue.png');
+        this.load.image('light_blue_lit', 'assets/light_blue_lit.png');
+        this.load.image('dark_blue', 'assets/dark_blue.png');
+        this.load.image('dark_blue_lit', 'assets/dark_blue_lit.png');
+        this.load.image('light_pink', 'assets/light_pink.png');
+        this.load.image('light_pink_lit', 'assets/light_pink_lit.png');
+        this.load.image('dark_pink', 'assets/dark_pink.png');
+        this.load.image('dark_pink_lit', 'assets/dark_pink_lit.png');
+        
+        this.load.image('red_spot', 'assets/red_spot.png');
+        this.load.image('red_spot_lit', 'assets/red_spot_lit.png');
+        
         
         this.load.image('menu_play_again', '../assets/menu_play_again.png');
         this.load.image('menu_next_track', '../assets/menu_next_track.png');
