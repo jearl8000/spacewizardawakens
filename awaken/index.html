@@ -22,17 +22,18 @@
 
             <h2> Match the Sequence. Unlock the Tomb. </h2>
 
-            <div id="gameDiv" style="width: 800px; height: 800px;"></div>
+            <div id="gameDiv" style="width: 800px; height: 600px;"></div>
 
             <br /><br />
 
-            <a href="../index.html">Back to Chapter List</a>
+            <a href="../index.html">Back to Track List</a>
         
         </div>
         
         <script type="text/javascript">
             window.onload = function() {
                 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'gameDiv');
+                window.myGame = game; // abomination
                 game.state.add('Boot', Awaken.Boot);
                 game.state.add('Preloader', Awaken.Preloader);
                 game.state.add('StartMenu', Awaken.StartMenu);
