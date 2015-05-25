@@ -15,6 +15,8 @@ Awaken.Preloader.prototype = {
         this.load.image('titlescreen', 'assets/main_title.png');
 
         this.load.image('background', 'assets/jupiter_background.png');
+        this.load.image('finale', 'assets/jupiter_glowing_endscreen.png');
+        this.load.image('endBG', 'assets/end_of_disc_one.png');
         
         this.load.image('light_blue', 'assets/light_blue.png');
         this.load.image('light_blue_lit', 'assets/light_blue_lit.png');
@@ -24,7 +26,6 @@ Awaken.Preloader.prototype = {
         this.load.image('light_pink_lit', 'assets/light_pink_lit.png');
         this.load.image('dark_pink', 'assets/dark_pink.png');
         this.load.image('dark_pink_lit', 'assets/dark_pink_lit.png');
-        
         this.load.image('red_spot', 'assets/red_spot.png');
         this.load.image('red_spot_lit', 'assets/red_spot_lit.png');
         

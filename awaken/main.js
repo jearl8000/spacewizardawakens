@@ -1,4 +1,4 @@
-/* Credit goes to the Simon Says example from Phaser: http://phaser.io/examples/v2/games/simon */
+/* Credit is due to the Simon Says example from Phaser: http://phaser.io/examples/v2/games/simon */
 
 
 Awaken.main = function(game) {
@@ -6,10 +6,12 @@ Awaken.main = function(game) {
 };
 
 var lightgroup;
-var N = 1;
+var background, finale;
+var N = 3;
 var userCount = 0;
-var currentCount = 0;
+// var currentCount = 0;
 var sequenceCount = 10;
+var sequenceCount = 5;
 var sequenceList = [];
 var timeCheck;
 var litSquare;
@@ -26,7 +28,7 @@ Awaken.main.prototype = {
     
     create: function () {
         this.stage.backgroundColor = '#0A9CB1';
-        this.add.tileSprite(0, 0, 800, 600, 'background');
+        background = this.add.tileSprite(0, 0, 800, 600, 'background');
         
         this.add.image(46, 340, 'light_blue');
         this.add.image(584, 248, 'dark_blue');
@@ -57,26 +59,27 @@ Awaken.main.prototype = {
             light.sound = sounds[i];
         }
         
+        finale = this.add.tileSprite(0, 0, 800, 600, 'finale');  // the end screen
+        finale.alpha = 0;
+        
         this.introTween();
         this.setUp();
-        // var that = this; // oh maiden wept
-        // setTimeout(function(){ that.templeSequence(); intro = false; }, 6000);
         this.time.events.add(Phaser.Timer.SECOND * 5, this.templeSequence, this);
         
     },
     
     setUp: function() {
-
+        // sequenceList = [0,1,1,1,1];
+        
         for (var i = 0; i < sequenceCount; i++)
         {
             thisSquare = this.rnd.integerInRange(0,4);
             sequenceList.push(thisSquare);
         }
-
     },
     
     restart: function() {
-        N = 1;
+        N = 3;
         userCount = 0;
         currentCount = 0;
         sequenceList = [];
@@ -84,8 +87,6 @@ Awaken.main.prototype = {
         loser = false;
         this.introTween();
         this.setUp();
-        // var that = this;
-        // setTimeout(function(){that.templeSequence(); intro=false;}, 6000);
         this.time.events.add(Phaser.Timer.SECOND * 5, this.templeSequence, this);
         intro=false;
 
@@ -95,15 +96,31 @@ Awaken.main.prototype = {
         intro = true;
         for (var i = 0; i < 5; i++)
         {
-            var flashing = this.add.tween(lightgroup.getAt(i)).to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 3, true);
-            var final = this.add.tween(lightgroup.getAt(i)).to( { alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+            var flashing = this.add.tween(lightgroup.getAt(i)).to( { alpha: 1 }, 400, Phaser.Easing.Linear.None, true, 0, 3, true);
+            var final = this.add.tween(lightgroup.getAt(i)).to( { alpha: 0 }, 400, Phaser.Easing.Linear.None, false);
 
             flashing.chain(final);
-            flashing.start();
+            // flashing.start();
         }
         intro=false;
     },
 
+    
+    templeSequence: function () {
+        templeTurn = true;
+        var lights = new Array;
+        var light = sequenceList[0];
+        lights[0] = this.add.tween(lightgroup.getAt(light)).to( { alpha: 1 }, 300, Phaser.Easing.Linear.None, false, 0, 0, true);
+        for (i=1; i < N; i++) { 
+            light = sequenceList[i];
+            // play sound and light up litSquare
+            // dim litSquare when sound ends
+            lights[i] = this.add.tween(lightgroup.getAt(light)).to( { alpha: 1 }, 300, Phaser.Easing.Linear.None, false, 0, 0, true)
+            lights[i-1].chain(lights[i]);
+        }
+        lights[0].start();
+        templeTurn = false;
+    },
     
     playerTurn: function(selected) {
         correctSquare = sequenceList[userCount];
@@ -117,86 +134,33 @@ Awaken.main.prototype = {
                 if (N == sequenceCount)
                 {
                     winner = true;
-                    // setTimeout(function(){restart();}, 3000);
-                    this.time.events.add(Phaser.Timer.SECOND * 3, this.restart, this);
+//                    this.time.events.add(Phaser.Timer.SECOND * 3, this.restart, this);
+                    this.time.events.add(Phaser.Timer.SECOND * 1, this.victory, this);
                 }
                 else
                 {
                     userCount = 0;
                     currentCount = 0;
                     N++;
-                    templeTurn = true;
+                    this.time.events.add(Phaser.Timer.SECOND * 1, this.templeSequence, this);
+                    // this.templeSequence();
+                    // templeTurn = true;
                 }
             }
         }
         else
         {
             loser = true;
-            // that = this; // oh no
-            // setTimeout(function(){ that.restart();}, 3000);
             this.time.events.add(Phaser.Timer.SECOND * 3, this.restart, this);
         }
 
     },
     
-    templeSequence: function () {
-        templeTurn = true;
-        litSquare = sequenceList[currentCount];
-        console.log(litSquare);
-        lightgroup.getAt(litSquare).alpha = 1;
-        
-        /*var lightOn = this.add.tween(lightgroup.getAt(litSquare)).to( { alpha: 1 }, 200, Phaser.Easing.Linear.None, true, 0, 0, true);
-        var lightOff = this.add.tween(lightgroup.getAt(litSquare)).to( { alpha: 0 }, 200, Phaser.Easing.Linear.None, true);
-        lightOn.chain(lightOff);
-        lightOn.start(); */
-        timeCheck = this.time.now;
-        currentCount++;
-    },
-    
-    
     
     update: function () {
-        if (templeTurn)
-        {
-            console.log("this.time.now: " + this.time.now);
-            console.log("timeCheck: " + timeCheck);
-            
-            if (this.time.now - timeCheck > 700-N*40)
-            {
-                console.log("pausing!");
-                lightgroup.getAt(litSquare).alpha = 0;
-                this.paused = true;
-
-                /*setTimeout(function()
-                {
-                    if ( currentCount< N)
-                    {
-                        this.paused = false;
-                        this.templeSequence();
-                    }
-                    else
-                    {
-                        templeTurn = false;
-                        this.paused = false;
-                    }
-                }, 400 - N * 20); */
-                this.time.events.add(400 - N * 20, this.updateTemple, this);
-            }
-        }         
     },
     
-    updateTemple: function() {
-        if ( currentCount < N)
-        {
-            this.paused = false;
-            this.templeSequence();
-        }
-        else
-        {
-            templeTurn = false;
-            this.paused = false;
-        }
-    },
+
         
     select: function(light, pointer) {
 
@@ -231,10 +195,8 @@ Awaken.main.prototype = {
     },
     
     victory: function () {
-        // alert("You win!");
-        // this.restartGame();
-        this.state.start('EndScene');
-
+        var glow_it_up = this.add.tween(finale).to( { alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
+        glow_it_up.onComplete.add(function() { this.state.start('EndScene'); }, this);
     },
     
 }
